@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a192f">
+<meta name="description" content="Cuaderno de estudio interactivo de la Confesión de Fe de Westminster (1647/1903).">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Libro IPCh">
+<link rel="mask-icon" href="./icons/icon-192.png" color="#0a192f">
+<title>Cuaderno de Estudio · Confesión de Fe de Westminster</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azul:#29abe2; --navy:#0a192f; --navy2:#12263f; --line:#e3e8ee;
+  --gris:#42505f; --grisclaro:#8894a4; --oro:#c5a059; --papel:#fbfcfd;
+}
+html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--papel);color:#25303d;line-height:1.75;-webkit-font-smoothing:antialiased}
+.sans{font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+
+/* ---------- layout ---------- */
+.wrap{display:flex;min-height:100vh}
+nav{
+  width:310px;flex:0 0 310px;background:var(--navy);color:#cfd9e4;
+  position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid #1c3550;
+}
+nav::-webkit-scrollbar{width:7px}
+nav::-webkit-scrollbar-track{background:#0d1e33}
+nav::-webkit-scrollbar-thumb{background:#2a4a68;border-radius:4px}
+.navhead{padding:20px 18px 14px;border-bottom:1px solid #1c3550;text-align:center;position:relative}
+.navhead img{width:64px;display:block;margin:0 auto 8px}
+.navhead .dn{font-size:12px;font-weight:700;color:var(--azul);letter-spacing:.08em;text-transform:uppercase;font-family:'Segoe UI',sans-serif}
+.navhead .ig{font-size:13px;color:#e8eef5;font-weight:600;margin-top:3px}
+.navhead .an{font-size:11px;color:var(--grisclaro);margin-top:5px}
+
+.navsearch{padding:12px 14px 8px}
+.navsearch input{width:100%;background:#0d2138;border:1px solid #24405f;border-radius:7px;color:#e8eef5;padding:8px 11px;font-size:12.5px;font-family:'Segoe UI',sans-serif}
+.navsearch input::placeholder{color:#5d7189}
+.navsearch input:focus{outline:none;border-color:var(--azul)}
+
+.toc{padding:6px 10px 40px}
+.toc a{display:block;text-decoration:none;color:#b7c4d2;font-size:12.8px;padding:6px 10px;border-radius:6px;line-height:1.45;transition:background .12s,color .12s}
+.toc a:hover{background:#16304c;color:#fff}
+.toc a.on{background:var(--azul);color:#062033;font-weight:600}
+.toc .mod{font-size:10px;font-weight:700;letter-spacing:.11em;color:#6b8098;text-transform:uppercase;padding:15px 10px 5px;font-family:'Segoe UI',sans-serif}
+.toc .lec{padding-left:14px;font-size:12.4px;position:relative}
+.toc .lec::before{content:'';position:absolute}
+.toc .hidden{display:none}
+
+main{flex:1;min-width:0}
+.wrapinner{max-width:800px;margin:0 auto;padding:0 40px 100px}
+
+/* ---------- topbar movil ---------- */
+.mtop{display:none;background:var(--navy);color:#fff;padding:10px 14px;position:sticky;top:0;z-index:60;align-items:center;gap:12px}
+.mtop img{width:30px}
+.mtop button{background:var(--azul);border:none;color:#062033;font-weight:700;padding:8px 14px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Segoe UI',sans-serif}
+
+/* ---------- portada ---------- */
+.portada{background:var(--navy);color:#fff;padding:70px 40px;text-align:center;position:relative;overflow:hidden}
+.portada::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,rgba(41,171,226,.16),transparent 62%);pointer-events:none}
+.portada img{width:118px;position:relative;z-index:1}
+.portada .kick{font-size:10.5px;letter-spacing:.24em;color:var(--azul);text-transform:uppercase;margin-top:24px;font-family:'Segoe UI',sans-serif;font-weight:700;position:relative;z-index:1}
+.portada h1{font-size:37px;line-height:1.22;margin:14px 0 8px;font-weight:400;color:#fff;position:relative;z-index:1}
+.portada h1 em{font-style:normal;color:var(--oro)}
+.portada .sub{font-size:14px;color:var(--grisclaro);font-family:'Segoe UI',sans-serif;letter-spacing:.04em;position:relative;z-index:1}
+.portada .lema{font-size:15px;font-style:italic;color:#c9d6e3;margin:34px auto 8px;max-width:560px;line-height:1.8;position:relative;z-index:1}
+.portada .lema-src{font-size:11.5px;color:var(--grisclaro);font-family:'Segoe UI',sans-serif;letter-spacing:.07em;position:relative;z-index:1}
+.portada .pr2{margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.16);max-width:340px;margin-left:auto;margin-right:auto;position:relative;z-index:1}
+.portada .pr2 .rol{font-family:'Segoe UI',sans-serif;font-size:10px;letter-spacing:2.2px;text-transform:uppercase;color:var(--grisclaro);display:block;margin-bottom:5px}
+.portada .pr2 .nom{font-size:17px;color:#fff;font-weight:600;letter-spacing:.3px}
+.portada .dn2{font-size:19px;font-weight:600;margin-top:40px;color:#fff;position:relative;z-index:1}
+.pagefoot{position:fixed;bottom:0;left:310px;right:0;background:#fff;border-top:1px solid var(--line);pointer-events:none;
+  padding:10px 40px;text-align:center;font-family:'Segoe UI',sans-serif;font-size:11.5px;color:#8894a4;z-index:40}
+.pagefoot b{color:#0a192f;font-weight:600}
+@media(max-width:1000px){ .pagefoot{left:0;padding:9px 22px} }
+.portada .ig2{font-size:22px;color:var(--azul);font-weight:600;margin-top:5px;position:relative;z-index:1}
+
+/* ---------- secciones ---------- */
+section{padding-top:56px}
+h2.sec{font-size:25px;color:var(--navy);font-weight:400;border-bottom:2px solid var(--azul);padding-bottom:11px;margin-bottom:22px}
+h2.sec .n{color:var(--grisclaro);font-size:13px;font-family:'Segoe UI',sans-serif;display:block;letter-spacing:.13em;text-transform:uppercase;margin-bottom:5px;font-weight:700}
+.lead{font-size:16.5px;line-height:1.85;color:#2c3947}
+
+/* ---------- propositos ---------- */
+.obj{background:#fff;border:1px solid var(--line);border-left:3px solid var(--azul);border-radius:8px;padding:20px 24px;margin:18px 0;box-shadow:0 1px 3px rgba(16,32,52,.05)}
+.obj h3{font-size:12px;font-family:'Segoe UI',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:var(--azul);margin-bottom:9px;font-weight:700}
+.obj p{font-size:15px;line-height:1.8}
+.obj ol{margin-left:20px}
+.obj li{font-size:14.6px;line-height:1.78;margin-bottom:9px}
+
+/* ---------- modulo ---------- */
+.modhead{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-radius:11px;padding:32px 34px;margin-bottom:30px}
+.modhead .mk{font-size:10.5px;letter-spacing:.2em;color:var(--azul);text-transform:uppercase;font-family:'Segoe UI',sans-serif;font-weight:700}
+.modhead h2{font-size:29px;font-weight:400;margin:9px 0 6px;color:#fff}
+.modhead .arts{font-size:12.5px;color:var(--grisclaro);font-family:'Segoe UI',sans-serif}
+
+/* ---------- articulo ---------- */
+.art{background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px 22px;margin:13px 0;box-shadow:0 1px 3px rgba(16,32,52,.05)}
+.art .an{font-size:11px;font-family:'Segoe UI',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--azul);font-weight:700;margin-bottom:7px}
+.art p{font-size:14.4px;line-height:1.78;color:#33404e}
+.art .falt{background:#fff8e8;border-left:3px solid var(--oro);font-size:13px;color:#6b5518;padding:11px 14px;border-radius:0 6px 6px 0;margin-top:9px;font-family:'Segoe UI',sans-serif;line-height:1.65}
+.art .falt b{color:#4a3a0c}
+
+/* ---------- versiculo ---------- */
+.vers{background:#f2f8fc;border-left:3px solid var(--azul);border-radius:0 8px 8px 0;padding:15px 20px;margin:13px 0}
+.vers .vr{font-size:11.5px;font-family:'Segoe UI',sans-serif;font-weight:700;color:var(--azul);letter-spacing:.06em;text-transform:uppercase}
+.vers .vt{font-size:14.8px;font-style:italic;line-height:1.82;margin-top:5px;color:#243240}
+.vers .vn{font-size:12.4px;color:var(--grisclaro);margin-top:7px;font-family:'Segoe UI',sans-serif;line-height:1.6}
+
+/* ---------- sub ---------- */
+h3.sub{font-size:11.5px;font-family:'Segoe UI',sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--grisclaro);margin:32px 0 12px;font-weight:700;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h3.sub::before{content:'';display:inline-block;width:16px;height:2px;background:var(--oro);vertical-align:middle;margin-right:9px}
+
+/* ---------- desarrollo ---------- */
+p.par{font-size:15.2px;line-height:1.86;margin-bottom:15px;text-align:justify;hyphens:auto}
+p.par::first-letter{}
+
+/* ---------- Aplicación ---------- */
+.apl{background:#f7fafc;border:1px solid var(--line);border-radius:8px;padding:17px 20px;margin:14px 0}
+.apl ul{list-style:none}
+.apl li{font-size:14.4px;line-height:1.8;padding-left:23px;position:relative;margin-bottom:10px}
+.apl li:last-child{margin-bottom:0}
+.apl li::before{content:'\25CF';position:absolute;left:5px;top:0;color:var(--azul);font-size:10px;line-height:1.9}
+
+/* ---------- oracion ---------- */
+.orar{background:var(--navy);color:#e8eef5;border-radius:9px;padding:22px 26px;margin:20px 0;font-style:italic;font-size:15.4px;line-height:1.82}
+.orar .lbl{display:block;font-style:normal;font-size:10.5px;letter-spacing:.15em;color:var(--oro);text-transform:uppercase;margin-bottom:9px;font-family:'Segoe UI',sans-serif;font-weight:700}
+
+/* ---------- notas ---------- */
+.notas{background:#fff;border:1px dashed #c3cdd8;border-radius:8px;padding:16px 20px;margin:18px 0}
+.notas .nl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--grisclaro);font-family:'Segoe UI',sans-serif;font-weight:700;margin-bottom:11px}
+.notas textarea{width:100%;min-height:118px;border:none;outline:none;font-family:Georgia,serif;font-size:14.5px;line-height:1.95;color:#33404e;resize:vertical;background:transparent}
+.notas textarea::placeholder{color:#aab4c0;font-style:italic}
+.notas .saved{font-size:10.5px;color:#5a8a3d;font-family:'Segoe UI',sans-serif;margin-top:7px;height:14px}
+
+/* ---------- progreso ---------- */
+.prog{background:#fff;border:1px solid var(--line);border-radius:8px;padding:15px 20px;margin:20px 0}
+.prog .pl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--grisclaro);font-family:'Segoe UI',sans-serif;font-weight:700;margin-bottom:9px}
+.prog .bar{height:7px;background:#e8edf2;border-radius:4px;overflow:hidden}
+.prog .fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--oro));width:0;transition:width .3s}
+.prog .pc{font-size:12px;color:var(--gris);margin-top:8px;font-family:'Segoe UI',sans-serif}
+.prog button{margin-top:11px;background:none;border:1px solid var(--line);color:var(--gris);padding:6px 13px;border-radius:6px;font-size:12px;cursor:pointer;font-family:'Segoe UI',sans-serif}
+.prog button:hover{border-color:var(--azul);color:var(--azul)}
+
+/* ---------- toc lateral ---------- */
+@media(max-width:1000px){
+  .wrap{display:block}
+  nav{position:fixed;left:0;top:0;bottom:0;z-index:70;transform:translateX(-100%);transition:transform .22s;box-shadow:4px 0 22px rgba(0,0,0,.28)}
+  nav.open{transform:translateX(0)}
+  .wrapinner{padding:0 22px 70px}
+  .mtop{display:flex}
+  .portada{padding:50px 22px}
+  .portada h1{font-size:27px}
+  .modhead{padding:24px 22px}
+  .modhead h2{font-size:23px}
+  h2.sec{font-size:21px}
+  .obj,.apl,.notas{padding:15px 17px}
+}
+@media(min-width:1001px){ .mtop{display:none!important} }
+@media print{
+  nav,.mtop,.notas textarea,.prog button,.filtro{display:none!important}
+  .wrap{display:block} section{page-break-before:always;padding-top:0}
+  .portada{page-break-after:always}
+  body{background:#fff}
+}
+/* Sub-enlaces del indice: los puntos de cada lección */
+.toc a.sub2{display:block;text-decoration:none;color:#8b98a8;font-size:11.6px;
+  padding:4px 10px 4px 32px;border-left:2px solid transparent;line-height:1.35;position:relative}
+.toc a.sub2:before{content:'';position:absolute;left:18px;top:50%;width:5px;height:5px;
+  margin-top:-2.5px;border-radius:50%;background:#c3ccd6}
+.toc a.sub2:hover{background:#16304c;color:#dfe7ef}
+.toc a.sub2:hover:before{background:#29abe2}
+.toc a.sub2.on{background:#eef7fd;color:#0e5a8a;font-weight:600;border-left-color:#29abe2}
+.toc a.sub2.on:before{background:#29abe2}
+.toc a.sub2.hidden{display:none}</style>
+</head>
+<body>
+<div class="mtop">
+  <img src="data:image/png;base64,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" alt="">
+  <strong style="font-size:13px;flex:1">Cuaderno de Estudio</strong>
+  <button id="menu" type="button">Men&uacute;</button>
+</div>
+<div class="wrap">
+  <nav>
+    <div class="navhead">
+      <img src="data:image/png;base64,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" alt="Iglesia Presbiteriana Divino Salvador">
+      <div class="dn">IPCH</div>
+      <div class="ig">Divino Salvador</div>
+      <div class="an">Confesión de Westminster · 1647/1903</div>
+    </div>
+    <div class="navsearch">
+      <input id="buscar" type="search" placeholder="Buscar lección, articulo o tema...">
+      <div class="prog" style="background:#0d2138;border-color:#24405f;margin-top:10px">
+        <div class="pl" style="color:#6b8098">Tu avance</div>
+        <div class="bar" style="background:#16304c"><div class="fill" id="totalbar"></div></div>
+        <div class="pc" id="totalpc" style="color:#8894a4"></div>
+      </div>
+    </div>
+    <div id="toc"></div>
+  </nav>
+  <main><div id="contenido"></div></main>
+</div>
+<div class="pagefoot"><b>Confesión de Fe de Westminster</b> &nbsp;&middot;&nbsp; Cuaderno de estudio &nbsp;&middot;&nbsp; 1647/1903</div>
+<script>
+// el JS recuperado ya declara LOGO_VERTICAL, LOGO_CRUZ y const DATOS: no duplicar
+
+
+var LOGO_CRUZ = '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';
+
+var LOGO_VERTICAL = LOGO_CRUZ;const DATOS = {
+  "datos": {
+    "iglesia": "Iglesia Presbiteriana Divino Salvador",
+    "denominacion": "Iglesia Presbiteriana de Chile",
+    "curso": "Escuela Bíblica Dominical — Clase de Adultos",
+    "tema": "Capacitación Eclesiástica y Gobierno Presbiteriano",
+    "anio": "2026",
+    "lema": "Procura con diligencia presentarte a Dios aprobado, como obrero que no tiene de que avergonzarse, que usa bien la palabra de verdad.",
+    "fundamentoGeneral": "2 Timoteo 2.15"
+  },
+  "objetivoGeneral": "Instruir a los miembros, lideres y oficiales en los principios, deberes, órganos de gobierno y procesos disciplinarios regulados en los Libros Cuarto, Quinto y Sexto del Estatuto de la Iglesia Presbiteriana de Chile, promoviendo una vivencia eclesiástica saludable, transparente, bien ordenada y profundamente fundamentada en las Sagradas Escrituras y la tradición reformada.",
+  "objetivosEspecificos": [
+    "Comprender la naturaleza de la membresía, distinguiendo responsabilidades, privilegios, derechos y deberes de miembros comulgantes y no comulgantes.",
+    "Analizar la estructura de gobierno democrático-representativo de la iglesia local y de sus consejos superiores (Consistorio, Presbiterio, Sinodo y Asamblea General), reconociendo el rol y requisitos de sus oficiales.",
+    "Internalizar el proposito, procedimiento y espiritu de la disciplina eclesiástica como medio pedagogico, preventivo y restaurador, enfocado en la gloria de Cristo, el bien del ofensor y la pureza de la iglesia.",
+    "Capacitar a la congregación para la participación activa y responsable en las Asambleas Congregaciónales y en la toma de decisiónes conciliares conforme al orden instituciónal."
+  ],
+  "modulos": [
+    {
+      "numero": 1,
+      "libro": "Libro Cuarto",
+      "titulo": "De los Miembros",
+      "articulos": "Arts. 8 al 18",
+      "fundamento": {
+        "ref": "1 Corintios 12.27",
+        "texto": "Asi que ustedes son el cuerpo de Cristo, y miembros individualmente de El.",
+        "nota": "La membresía no es un registro formal o burocrático, sino la manifestación visible de ser partes vivas e interconectadas del Cuerpo de Cristo en la iglesia local."
+      },
+      "objetivoGeneral": "Capacitar a los alumnos en la comprensión teológica e instituciónal de la membresía eclesiástica, diferenciando las clases de miembros y comprometiendose con los deberes y derechos del pacto comunitario.",
+      "lecciónes": [
+        {
+          "num": 1,
+          "titulo": "La naturaleza de la membresía y el Rol Nacional",
+          "arts": [
+            "Arts. 8 - 9"
+          ],
+          "articulos": [
+            {
+              "n": 8,
+              "texto": "Son miembros de la IGLESIA PRESBITERIANA DE CHILE todas las personas inscritas en su Rol Nacional, de acuerdo con el reglamento."
+            },
+            {
+              "n": 9,
+              "texto": "Los miembros de la IGLESIA son comulgantes y no comulgantes. Son miembros comulgantes o en plena comunión quienes han sido bautizados y han hecho pública profesión de fe en Jesucristo y son recibidos como tales por una iglesia local. Son miembros no comulgantes los menores de edad que, estando bajo cuidado personal, tuición o guarda de un miembro comulgante, han sido bautizados en la infancia, que asisten y participan en una iglesia local y que no han hecho pública profesión de fe."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "1 Corintios 12.12, 27",
+              "texto": "Porque asi como el cuerpo es uno, y tiene muchos miembros... ustedes son el cuerpo de Cristo, y miembros individualmente de El.",
+              "nota": "Fundamento de ser miembros vivos."
+            },
+            {
+              "ref": "Hechos 2.41, 47",
+              "texto": "...se anadieron aquel día como 3.000 personas... Y el Senor anadia cada día al grupo de ellos a los que habian de ser salvos.",
+              "nota": "Fundamento del conteo y registro eclesiástico."
+            },
+            {
+              "ref": "Efesios 2.19",
+              "texto": "Asi que ustedes ya no son extranos ni extranjeros, sino que son conciudadanos de los santos y son de la familia de Dios."
+            }
+          ],
+          "Introducción": "Registrarse en la iglesia no es un tramite burocrático. Es la manifestación visible de nuestra unión con Cristo y con Su cuerpo. En la Iglesia Presbiteriana de Chile la comunión es concreta y medible: hay un Rol, hay un nombre, hay un compromiso que se puede asumir.",
+          "desarrollo": [
+            "El Artículo 8 establece una regla simple y estricta: se es miembro de la Iglesia Presbiteriana de Chile si y solo si se está inscrito en el Rol Nacional. No hay excepción. La consecuencia práctica es que el registro no es un tramite administrativo suelto: es la puerta de entrada al conjunto de derechos y deberes que las lecciónes siguientes desarrollaran.",
+            "El Artículo 9 introduce una distinción que parece administrativa pero es profundamente teológica. El miembro comulgante es aquel que ha sido bautizado y ha hecho pública profesión de fe en Jesucristo, y que una iglesia local ha recibido como tal. El miembro no comulgante es el menor de edad, bautizado en la infancia, que asiste y participa en una iglesia local y que está bajo el cuidado de un miembro comulgante.",
+            "La diferencia no es de rango. Un no comulgante no es un miembro de segunda clase: es un miembro del pacto por la vía de la familia. Lo que falta es la plenitud de la comunión que se confiesa, no su pertenencia. Esa distinción explica por que el Estatuto regula en el artículo 16 la recepción de los no comulgantes, y en los artículos 15 y 17 sus causas de perdida: son personas con derechos y deberes propios, no ausencias.",
+            "La pregunta que la iglesia local debe hacerse con cada persona no es si tiene derecho a estar aquí, sino si su integración en el pacto está siendo cuidada. El texto de Efesios 2.19 — ya no sois extranos, sino conciudadanos de los santos y de la familia de Dios — es el marco: la comunión es el estado natural del creyente en Cristo, y el registro es el modo en que esa comunión se hace visible y verificable."
+          ],
+          "Aplicación": [
+            "Revisa si tus datos en el Rol Nacional estan actualizados. Un registro desactualizado no es un detalle: impide ejercer derechos y refleja un desorden que luego se paga en la Secretaría.",
+            "Si tienes hijos menores en la iglesia, verifica que esten correctamente inscritos como miembros no comulgantes y bajo tu cuidado. El Artículo 9 les reconoce una posición real en el pacto.",
+            "Si conoces a alguien que asiste regularmente y participa, pero no está inscrito, ayudalo a regularizar su situación. El cuidado pastoral incluye el orden."
+          ],
+          "cierre": "Pertenecer al cuerpo implica compromiso y cuidado pastoral. Oramos pidiendo ser miembros activos e insustituibles, no espectadores de nuestra propia membresía."
+        },
+        {
+          "num": 2,
+          "titulo": "Vías de recepción e incorporación",
+          "arts": [
+            "Arts. 10, 14, 16"
+          ],
+          "articulos": [
+            {
+              "n": 10,
+              "texto": "Los miembros comulgantes seran recibidos mediante alguna de las siguientes formas: a) Pública profesión de fe... b) Bautismo y pública profesión de fe. c) Carta de traslado... d) Restauración. e) Jurisdicción territorial, conforme al artículo 14."
+            },
+            {
+              "n": 14,
+              "texto": "Para la incorporación de miembros, podra operar la jurisdicción territorial de una iglesia local respecto de miembros comulgantes que provengan de otra iglesia local... y que hayan participado activamente, a lo menos, durante un año."
+            },
+            {
+              "n": 16,
+              "texto": "Los miembros no comulgantes seran recibidos por: a) Bautismo en la infancia. b) Traslado de los padres o adultos a los que les corresponda... su cuidado personal."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Romanos 10.9-10",
+              "texto": "...si confiesas con tu boca a Jesús por Senor... con la boca se confiesa para salvación.",
+              "nota": "Profesión de fe."
+            },
+            {
+              "ref": "Mateo 28.19",
+              "texto": "Vayan, pues, y hagan discipulos... bautizandolos en el nombre del Padre y del Hijo y del Espiritu Santo...",
+              "nota": "Bautismo y recepción."
+            },
+            {
+              "ref": "Galatas 6.1",
+              "texto": "...si alguien es sorprendido en alguna falta, ustedes que son espirituales, restaureenlo...",
+              "nota": "Restauración."
+            }
+          ],
+          "Introducción": "La iglesia debe cuidar sus puertas. Una puerta abierta sin criterio deja entrar lo que no debe; una puerta cerrada sin amor deja fuera a los que Cristo compro con su sangre.",
+          "desarrollo": [
+            "El Artículo 10 enumera cinco vias de recepción de miembros comulgantes: pública profesión de fe; bautismo y pública profesión de fe; carta de traslado; restauración; y jurisdicción territorial. La lista es taxativa. Si alguien llega por una vía que no esta aquí — por ejemplo, una traslación de confianza sin carta formal — no hay un segundo marco estatutario para incorporarlo.",
+            "La quinta vía, la jurisdicción territorial, merece atención aparte porque es la más específica. El Artículo 14 permite que una iglesia local incorpore a miembros comulgantes que provienen de otra iglesia local, siempre que hayan participado activamente en esta durante al menos un año. El texto combina dos condiciónes: procedencia de otra iglesia local, y un año de participación activa verificable. Ese año es el tiempo en que la iglesia conoce a las personas y puede dar testimonio de su vida.",
+            "El Artículo 16 regula la recepción de no comulgantes por dos vias: bautismo en la infancia, y traslado junto con los padres o adultos que tienen su cuidado. Ambas parten de una misma realidad: el menor no llega solo a la iglesia, llega con su familia.",
+            "Las tres vias — recepción, jurisdicción y traslado — comparten un mismo fundamento: ninguna entrada a la iglesia es automatica ni irreversible. Cada una deja al miembro en una relación que sera cuidada y que puede, si la vida lo requiere, transformarse. La restauración existe como vía precisamente porque el Estatuto tiene una expectativa de permanencia, no una regla de permanencia."
+          ],
+          "Aplicación": [
+            "Si te transladaste de otra iglesia, verifica que llevas la carta correspondiente. Sin ella, tu situación en el Rol puede quedar en un limbo que el Artículo 18 (plazo de 30 días habiles) termina resolviendo.",
+            "Como iglesia, ejercita el discernimiento del Consitorio al admitir nuevos creyentes. No es un tramite administrativo: es discernimiento espiritual.",
+            "Valora el bautismo infantil como una puerta seria de entrada al pacto, no como un rito sin consecuencias. Es el fundamento de la recepción de todos los hijos de creyentes."
+          ],
+          "cierre": "El orden de recepción preserva la verdad y la comunión fraternal. Se cierra orando por los nuevos miembros, para que el fundamento sea Cristo y no la costumbre."
+        },
+        {
+          "num": 3,
+          "titulo": "Derechos y privilegios de los miembros comulgantes",
+          "arts": [
+            "Art. 11"
+          ],
+          "articulos": [
+            {
+              "n": 11,
+              "texto": "Son derechos de los miembros comulgantes: a) Ser elegidos para cargos en las organizaciónes internas... siempre que cuenten con, a lo menos, un año como miembros comulgantes, sean diezmeros efectivos y sistematicos, y tengan asistencia regular... b) Participar con voz y voto en las asambleas congregaciónales. c) Participar del sacramento de la Santa Cena, asi como de todos los auxilios espirituales... d) Presentar a sus hijos y menores sujetos a su cuidado... al sacramento del bautismo."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Hechos 6.3",
+              "texto": "Por tanto, hermanos, escogan de entre ustedes a siete hombres de buena reputación...",
+              "nota": "Voto y elección congregaciónal."
+            },
+            {
+              "ref": "1 Corintios 11.26, 28",
+              "texto": "Porque todas las veces que coman este pan y beban esta copa, la muerte del Senor proclaman... Ponganse a prueba cada uno de ustedes...",
+              "nota": "Participación en la Santa Cena."
+            },
+            {
+              "ref": "Hechos 2.39",
+              "texto": "Porque la promesa es para ustedes y para sus hijos...",
+              "nota": "Presentación de hijos al bautismo."
+            }
+          ],
+          "Introducción": "Pertenecer a la familia de Dios no es un privilegio pasivo. Es el hecho de una pertenencia real la que nos otorga bendiciónes y facultades activas de gobierno y comunión.",
+          "desarrollo": [
+            "El Artículo 11 enumera cuatro derechos. El primero es ser elegido para cargos en las organizaciónes internas, condiciónado a tres requisitos: al menos un año como miembro comulgante, diezmo efectivo y sistematico, y asistencia regular. Conviene leer con atención: no son condiciónes técnicas, son indicadores de una vida piedosa.",
+            "El segundo derecho es participar con voz y voto en las asambleas congregaciónales. Es la expresión más concreta de la naturaleza representativa del gobierno presbiteriano. No es un derecho que se pueda delegar sin costo: quien asiste y vota está a cargo de la salud espiritual de toda la comunidad.",
+            "El tercer derecho es la participación en el sacramento de la Santa Cena y en todos los auxilios espirituales. Nótese que el texto no dice asistir: dice participar. La Cena es un examen, no un rito social. El versiculo de 1 Corintios 11.28 — ponganse a prueba cada uno — es el criterio con el que se ejerce este derecho.",
+            "El cuarto derecho es presentar a los hijos y menores sujetos a su cuidado al sacramento del bautismo. Hechos 2.39 fundamenta la promesa más amplia que alcanza a los hijos: la promesa es para ustedes y para ellos. El derecho del padre no es una propiedad sobre los hijos, sino una responsabilidad ante el pacto."
+          ],
+          "Aplicación": [
+            "Si cumples los tres requisitos (un año, diezmo efectivo y sistematico, asistencia regular), tienes derecho a ser candidato a cargo. No lo tomes a la ligera, y no te excluyas por sentirte modesto.",
+            "Ejercita el derecho al voto con oración y con preparación. Votar es un acto de servicio, no un tramite.",
+            "Acercate a la Santa Cena con la conciencia preparada. El Artículo 11 lo llama derecho, pero participación es un encuentro con Cristo, no con una comunidad."
+          ],
+          "cierre": "Los derechos son herramientas de servicio e integración espiritual. Oramos en gratitud por los medios de gracia que la iglesia ha recibido y nos ha entregado."
+        },
+        {
+          "num": 4,
+          "titulo": "Deberes, fidelidad y mayordomía",
+          "arts": [
+            "Art. 12"
+          ],
+          "articulos": [
+            {
+              "n": 12,
+              "texto": "Son deberes de los miembros comulgantes: a) Vivir de acuerdo con las enseñanzas de las Sagradas Escrituras... b) Honrar y propagar el evangelio... c) Guardar un buen testimonio de vida... d) Contribuir a la iglesia con sus diezmos y ofrendas en forma continua, efectiva y sistematica. e) Obedecer a las autoridades de la IGLESIA... f) Participar activamente... g) Asistir regularmente a los cultos... h) Mantener la paz y la unidad... i) Someterse a la disciplina eclesiástica."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Malquias 3.10; 2 Corintios 9.7",
+              "texto": "Traigan todo el diezmo al alfoli... Dios ama al dador alegre.",
+              "nota": "Diezmos continuos, efectivos y sistematicos."
+            },
+            {
+              "ref": "Hebreos 13.17",
+              "texto": "Obedezcan a sus pastores y sometanse a ellos, porque ellos velan por sus almas...",
+              "nota": "Obediencia a autoridades."
+            },
+            {
+              "ref": "Efesios 4.3",
+              "texto": "Esforzandose por preservar la unidad del Espiritu en el vinculo de la paz.",
+              "nota": "Paz y unidad."
+            }
+          ],
+          "Introducción": "A los privilegios en la iglesia les corresponden deberes sagrados, asumidos en el pacto. El Artículo 12 no es un reproche: es el reverso exacto del Artículo 11.",
+          "desarrollo": [
+            "Los nueve incisos del Artículo 12 se agrupan naturalmente en tres bloques. El primero (a, b, c) es doctrinal-vital: vivir conforme a las Escrituras, honrar y propagar el evangelio, guardar buen testimonio. El segundo (d) es financiero: contribuir con diezmos y ofrendas de forma continua, efectiva y sistematica. El tercero (e, f, g, h, i) es eclesial: obedecer a las autoridades, participar activamente, asistir a los cultos, mantener la paz y la unidad, y someterse a la disciplina.",
+            "La expresión \"continua, efectiva y sistematica\" aparece también en el Artículo 11 como condición para ser candidato a cargo. Esto crea un puente importante: el diezmo no es una opción generosa, es una condición de participación plena en el gobierno. Malquias 3.10 y 2 Corintios 9.7 lo framena correctamente: Dios ama al dador alegre, no al dador exacto.",
+            "El inciso e) — obedecer a las autoridades de la iglesia — es el más dificil de vivir y el más importante. Hebreos 13.17 lo fundamenta en el cuidado pastoral: ellos velan por nuestras almas. La obediencia no es sumisión ciega a personas, sino reconocimiento del orden que Dios ha establecido para sus canas.",
+            "El inciso i) — someterse a la disciplina eclesiástica — cierra el circulo con el Libro Sexto. Quien goza de los derechos del Artículo 11 acepta también el procedimiento del Libro VI. No es una amenaza: es la misma disciplina de amor que Hebreos 12.6 describe como disciplina del Padre que ama."
+          ],
+          "Aplicación": [
+            "Evalua tu aporte financiero con honestidad: es continuo, efectivo y sistematico? El test no es cuanto das, sino si tu finanzas reflejan un orden o una reacción a las necesidades del mes.",
+            "Examina tu testimonio público. El inciso c) habla de vida visible: en el trabajo, en la casa, en la conversación.",
+            "Cuando te toque someterte a una decisión del Consitorio o a un consejo de disciplina, hazlo con espiritu de hijo y no de victima. Hebreos 13.17 no pide sumisión servil, sino confianza."
+          ],
+          "cierre": "El cumplimiento de deberes es fruto de la gratitud por la salvación. Se ora por fidelidad en la mayordomía, entendida como una Eternidad, no como una temporalidad. Lo que se da por Cristo retorna a Cristo."
+        },
+        {
+          "num": 5,
+          "titulo": "Traslados, perdida de membresía y cuidado de los no comulgantes",
+          "arts": [
+            "Arts. 13, 15, 17, 18"
+          ],
+          "articulos": [
+            {
+              "n": 13,
+              "texto": "...podra solicitar una carta para ello. Esta carta detallara el comportamiento y fidelidad a Dios del miembro y su familia... y facultar el traslado."
+            },
+            {
+              "n": 15,
+              "texto": "El miembro comulgante perdera su condición... por: a) Exclusión... b) Renuncia... c) Ausencia injustificada durante un año... d) Carta de traslado a otra iglesia evangelica."
+            },
+            {
+              "n": 17,
+              "texto": "Los miembros no comulgantes perderan su condición... por: a) Carta de traslado de los padres... b) Alcanzar la mayoría de edad... c) Pública profesión de fe..."
+            },
+            {
+              "n": 18,
+              "texto": "Cada iglesia local debe dar cuenta al Rol Nacional, en un plazo no superior a treinta días habiles..."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Hebreos 10.25",
+              "texto": "No dejando de congregarnos, como algunos tienen por costumbre...",
+              "nota": "Perdida por ausencia injustificada."
+            },
+            {
+              "ref": "Deuteronomio 6.6-7",
+              "texto": "Estas palabras... las ensenares incansablemente a tus hijos...",
+              "nota": "Cuidado de no comulgantes."
+            }
+          ],
+          "Introducción": "La iglesia debe velar tanto por la entrada como por la salida. Cada modo de terminación de la membresía es, en el fondo, una manera de conferir un cuidado.",
+          "desarrollo": [
+            "El Artículo 13 regula la carta de traslado. La definición es reveladora: la carta detallara el comportamiento y fidelidad a Dios del miembro y su familia. Esto no es un simple formulario de salida; es un testimonio escrito que viaja con la persona y acompana su recepción en la iglesia siguiente. El Artículo 14 lo complementa: la carta tiene un efecto — facultar el traslado.",
+            "El Artículo 15 enumera cuatro formas de perder la condición de miembro comulgante: exclusión (que requiere el procedimiento del Libro VI), renuncia (voluntaria), ausencia injustificada durante un año, y carta de traslado a otra iglesia evangelica. Las cuatro responden a logicas distintas. La primera es una acción disciplinaria; la segunda y la cuarta son decisiónes personales; la tercera es una consecuencia que la iglesia aplica por inacción.",
+            "La ausencia injustificada durante un año merece comentario. Hebreos 10.25 es el texto que fundamenta esta causal: no dejando de congregarnos. El Estatuto no castiga la ausencia por la ausencia, sino lo que la ausencia revela: una ruptura del pacto de participación. Un año es un tiempo suficiente para distinguir la ausencia temporal de la ruptura de hecho.",
+            "El Artículo 17 regula la salida de los no comulgantes por tres vias: carta de traslado de los padres, alcance de la mayoría de edad, y pública profesión de fe. La tercera merece atención: es el momento en que el no comulgante, ahora mayor, deja de serlo para asumir su propia elección. No es una perdida, sino una OWN.",
+            "El Artículo 18 cierra el modulo con un deber administrativo que tiene un fondo pastoral: cada iglesia local debe dar cuenta al Rol Nacional en un plazo no superior a treinta días habiles. Treinta días es un plazo breve; obliga a la iglesia a tener un registro vivo y al día. El orden del Rol es el reflejo exterior del cuidado interior."
+          ],
+          "Aplicación": [
+            "Si tienes la intención de trasladarte, solicita la carta formalmente. La alternativa — desaparecer — activa la causal de ausencia injustificada del Artículo 15 c), que es más dura y menos clemente para la iglesia que te recibio.",
+            "Evita el abandono. Si has estado ausente, retoma tu participación: el Artículo 15 c) aplica al año, pero el pastoreo del Buen Pastor empieza antes.",
+            "Instruye a tus hijos a profesar su fe al crecer. Los artículos 17 b) y c) muestran que el no comulgante tiene un camino natural hacia la plenitud de la comunión."
+          ],
+          "cierre": "El seguimiento de los miembros refleja el cuidado del Buen Pastor. Se ora por la preservación de las almas, por los que se van con la carta y por los que quedan esperando ser buscados."
+        }
+      ]
+    },
+    {
+      "numero": 2,
+      "libro": "Libro Quinto",
+      "titulo": "De la Forma de Gobierno y los Organos de la Iglesia",
+      "articulos": "Arts. 19 al 122",
+      "fundamento": {
+        "ref": "1 Corintios 14.40",
+        "texto": "Pero que todo se haga decentemente y con orden.",
+        "nota": "El gobierno, los oficios y la estructura conciliar existen para garantizar la edificación, el buen orden y el cuidado amoroso del rebano bajo la soberanía de Cristo."
+      },
+      "objetivoGeneral": "Analizar el sistema de gobierno democrático-representativo de la Iglesia Presbiteriana de Chile, reconociendo la autoridad, funciónes e interrelación entre los oficiales eclesiasticos y los distintos consejos conciliares.",
+      "lecciónes": [
+        {
+          "num": 6,
+          "titulo": "La iglesia local y las Asambleas Congregaciónales",
+          "arts": [
+            "Arts. 19 - 27"
+          ],
+          "articulos": [
+            {
+              "n": 19,
+              "texto": "La iglesia local es una comunidad constituida de miembros en plena comunión y de sus hijos... Tienen un gobierno propio, democrático representativo, que reside en el Consitorio..."
+            },
+            {
+              "n": 21,
+              "texto": "...El derecho de la iglesia local para elegir a sus oficiales es irrevocable e irrenunciable..."
+            },
+            {
+              "n": 22,
+              "texto": "...La asamblea congregaciónal es una reunión de caracter general... La asamblea congregaciónal se reunira, ordinariamente, una vez al año; y, extraordinariamente, cuantas veces el Consitorio lo estime necesario..."
+            },
+            {
+              "n": 23,
+              "texto": "La asamblea congregaciónal se constituira y sesiónaran con los dos tercios de los miembros comulgantes que sean contribuyentes continuos, efectivos y sistematicos..."
+            },
+            {
+              "n": "24-27",
+              "texto": "[Texto de los artículos 24 al 27 — verificar en el Estatuto. El programa original los mencióna como tema (convocatoria de 30 días, caracter público, quorum y orden transparente) pero no reproduce su redacción.]",
+              "nota": "Estos artículos regulan la convocatoria (con 30 días de anticipación), el caracter público de la asamblea, y los procedimientos de votación. Su redacción exacta debe verificarse directamente en el Estatuto vigente."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Hechos 14.23",
+              "texto": "Después que les designaron ancianos en cada iglesia, habiendo orado con ayunos, los encomendaron al Senor...",
+              "nota": "Gobierno representativo local."
+            },
+            {
+              "ref": "Hechos 15.22",
+              "texto": "Entonces parecio bien a los apóstoles y a los ancianos, con toda la iglesia, escoger de entre ellos algunos hombres...",
+              "nota": "Asamblea comunitaria."
+            }
+          ],
+          "Introducción": "El gobierno presbiteriano combina dos cosas que a menudo estan en tensión: la soberanía de la comunidad reunida en asamblea, y la representación de sus oficiales. El equilibrio entre ambas es lo que define este sistema.",
+          "desarrollo": [
+            "El Artículo 19 define la iglesia local como una comunidad constituida de miembros en plena comunión y de sus hijos, con un gobierno propio, democrático representativo, que reside en el Consitorio. Tres elementos merecen ser subrayados: la comunidad es de miembros y sus hijos; el gobierno es propio; y reside en el Consitorio, no en un individuo.",
+            "El Artículo 21 establece un principio de maxima importancia: el derecho de la iglesia local para elegir a sus oficiales es irrevocable e irrenunciable. Esta palabra — irrenunciable — es la clave de lectura de todo el Libro Quinto. La comunidad que puede elegir a sus pastores es que puede no elegirlos. La soberanía es real.",
+            "El Artículo 22 define la asamblea como una reunión de caracter general, que se reuniere ordinariamente una vez al año y extraordinariamente cuantas veces el Consitorio lo estime necesario. Nótese que la convocatoria extraordinaria no requiere un numero regular de miembros: basta con la estimación del Consitorio. La capacidad de reunión está garantizada por el gobierno.",
+            "El Artículo 23 establece el quorum: la asamblea se constituira y sesiónara con los dos tercios de los miembros comulgantes que sean contribuyentes continuos, efectivos y sistematicos. Es el mismo criterio de elegibilidad del Artículo 11 d). La coherencia interna del Estatuto es notoria: quien es comulgante en los derechos es comulgante también en el quorum.",
+            "Los artículos 24 al 27 completan el regimen de la asamblea con la convocatoria de treinta días de anticipación, el caracter público de la reunión, las reglas de votación y la garantía de orden y transparencia. La combinación de estos elementos con el quorum del Artículo 23 produce una garantía: ninguna decisión de peso puede tomarse por un grupo pequeno sin dueño, ni en secreto."
+          ],
+          "Aplicación": [
+            "Participa responsablemente en las asambleas. El Artículo 23 te da voz y voto: usarlo es un deber tanto como un derecho.",
+            "Cuando se convoque una asamblea extraordinaria, entiende que el Consitorio ha estimado necesario reunirla. La respuesta correcta es la disponibilidad, no la sospecha.",
+            "Si eres miembro de un centro de predicación y aspiras a iglesia local organizada, el Artículo 19 es el criterio de distinción."
+          ],
+          "cierre": "El orden de la asamblea refleja la paz y la soberanía de Cristo. Oramos por nuestras asambleas, para que lo que se decide en ellas sirva a la edificación del Cuerpo."
+        },
+        {
+          "num": 7,
+          "titulo": "Los oficiales de la iglesia: Pastores, Presbíteros y Diáconos",
+          "arts": [
+            "Arts. 28 - 33, 73 - 84"
+          ],
+          "articulos": [
+            {
+              "n": 28,
+              "texto": "Los oficios eclesiasticos son la respuesta al llamado de Dios ejercido por personas cuya vocación... ha sido reconocida..."
+            },
+            {
+              "n": 29,
+              "texto": "Los oficiales... son: 1.- Presbítero Docente, también llamado Ministro del Evangelio o Pastor. 2.- Presbítero Regente, también llamado Anciano Gobernante. 3.- Diácono... La ordenación... es perpetua y su ejercicio es temporal."
+            },
+            {
+              "n": "31, 33",
+              "texto": "Elección, ordenación (imposición de manos), instalación e igualdad en dignidad entre los oficios."
+            },
+            {
+              "n": "73-74",
+              "texto": "Deberes del Presbítero Regente: gobierno, disciplina, visitación y enseñanza."
+            },
+            {
+              "n": "76-77",
+              "texto": "Deberes del Diácono: servicio, cuidado de necesitados, acción social y administración de bienes."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "1 Timoteo 3.1-13",
+              "texto": "Requisitos biblicos de los obispos/ancianos y de los diáconos.",
+              "nota": "Criterios de los oficios."
+            },
+            {
+              "ref": "1 Pedro 5.1-3",
+              "texto": "Por tanto, a los ancianos entre ustedes, exhorto yo... pastoreen el rebano de Dios entre ustedes, velando por el...",
+              "nota": "Presbíteros."
+            },
+            {
+              "ref": "Hechos 6.3-5",
+              "texto": "Servicio diaconal para el bienestar fisico de la comunidad.",
+              "nota": "Diaconado."
+            }
+          ],
+          "Introducción": "Los oficiales son dones de Cristo para cuidar, gobernar y servir a Su iglesia. El merito de los oficios no está en el reconocimiento humano, sino en el llamado de Dios que ha sido reconocido por la comunidad.",
+          "desarrollo": [
+            "El Artículo 29 enumera los tres oficios eclesiasticos y establece dos principios fundamentales. El primero: el nombre oficial de cada oficio es Presbítero Docente (Ministro del Evangelio o Pastor), Presbítero Regente (Anciano Gobernante), y Diácono. El segundo: la ordenación es perpetua, pero su ejercicio es temporal. Esta última frase es teologicamente decisiva: nadie tiene derecho permanente sobre un oficio; el ejercicio es siempre por tiempo determinado y sujeto a la confianza de la comunidad.",
+            "Los artículos 31 y 33 regulan la elección, la ordenación por imposición de manos, la instalación, y establecen la igualdad en dignidad entre los oficios. La igualdad en dignidad no significa igualdad en función: el Presbítero Docente administra los sacramentos, el Regente gobierna y visita, el Diácono sirve y administra bienes. Pero los tres son, en dignidad, una sola cosa: todos son oficios del mismo Senor.",
+            "1 Timoteo 3 y 1 Pedro 5.1-3 ofrecen los criterios biblicos para el oficio presbiteral: no se busca el que sea más capaz de hablar, sino el que vela por el rebano con integridad. 1 Pedro lo dice con una advertencia clara — no por ganancia, sino por celo sincero — que es el criterio contra el cual se mide cualquier candidatura.",
+            "Los artículos 73 y 74 asignan al Presbítero Regente el gobierno, la disciplina, la visitación y la enseñanza. Los artículos 76 y 77 asignan al Diácono el servicio, el cuidado de los necesitados, la acción social y la administración de bienes. La lista no es arbitraria: refleja que el gobierno de la iglesia no es solo gobierno del espiritu, sino también gobierno de la misericordia y de los recursos."
+          ],
+          "Aplicación": [
+            "Valora la labor de nuestros oficiales y respalda su ministerio en oración y sujeción. Hebreos 13.17.",
+            "Si eres diácono, recuerda que el Artículo 76-77 te encomienda la misericordia concreta: los necesitados, la acción social, los bienes.",
+            "Cuando se vote a un candidato a oficio, usa el criterio de 1 Timoteo 3 y 1 Pedro 5, no el de la simpatía personal."
+          ],
+          "cierre": "El liderazgo biblico se caracteriza por el servicio humilde. Oramos por nuevos oficiales piadosos, y por los que ya sirven con fidelidad."
+        },
+        {
+          "num": 8,
+          "titulo": "El Ministro del Evangelio y la Candidatura Pastoral",
+          "arts": [
+            "Arts. 34 - 72"
+          ],
+          "articulos": [
+            {
+              "n": 34,
+              "texto": "El presbítero docente es llamado por Jesucristo a ejercer el ministerio pastoral... ministrar los sacramentos, impetrar la bendición divina... supervisar la liturgia..."
+            },
+            {
+              "n": 38,
+              "texto": "El ministro podra ser electo o designado..."
+            },
+            {
+              "n": "53, 54, 57, 58",
+              "texto": "Proceso de Candidatura: miembro comulgante por 3 años, recomendación del Consitorio, salud, estudios. Licenciatura: exámenes de teología, exegesis, monografía y sermon ante el Presbiterio."
+            },
+            {
+              "n": "68, 69",
+              "texto": "Ordenación e incorporación al registro del Presbiterio."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "2 Timoteo 4.1-2",
+              "texto": "Te encargo solemnemente... predica la palabra; insiste a tiempo y fuera de tiempo...",
+              "nota": "Ministerio de la Palabra."
+            },
+            {
+              "ref": "2 Timoteo 2.2",
+              "texto": "Y lo que has oido de mi... esto encarga a hombres fieles que sean capaces de ensenar también a otros.",
+              "nota": "Candidatura y formación."
+            }
+          ],
+          "Introducción": "La proclamación de la Palabra requiere ministros debidamente examinados, llamados y formados. La vocación del ministerio no se improvisa: el Estatuto la somete a un proceso.",
+          "desarrollo": [
+            "El Artículo 34 describe las tareas del Presbítero Docente: ministrar los sacramentos, impetrar la bendición divina, supervisar la liturgia. Son tareas que solo puede realizar alguien ordenado para ello. El verbo supervisar la liturgia indica que el culto público es también responsabilidad pastoral, no solo una costumbre histórica de la comunidad.",
+            "El Artículo 38 introduce una distinción esencial: el ministro podra ser electo o designado. La elección implica que la comunidad lo elige mediante su mecanismo Asamblea; la designación implica que otro camino conduce a el — por lo general, la designación desde un ambito conciliar. La ruta de ejecución para de la misma, pero distinto origen y distinta relación.",
+            "Los artículos 53, 54, 57 y 58 describen el proceso de candidatura con requisitos concretos: tres años como miembro comulgante, recomendación del Consitorio, salud y estudios. Los tres años de membresía no son un requisito burocrático: son el tiempo mínimo para que la comunidad conozca la vida de una persona. La recomendación del Consitorio reconoce que la iglesia como institución tiene un papel en la identificación de dones.",
+            "La licenciatura se alcanza mediante exámenes de teología, exegesis, monografía y sermon ante el Presbiterio. Nótese el plural: se evaluan cuatro dimensiónes distintas del candidato. No se busca un único talento. Un candidato con solida teología pero sin capacidad de sermon no está listo, y viceversa. Los artículos 68 y 69 completan el proceso con la ordenación y la incorporación al registro del Presbiterio."
+          ],
+          "Aplicación": [
+            "Fomenta la vocación pastoral en los jovenes de la iglesia. El proceso del Artículo 53 empieza mucho antes de la teología: empieza en una comunidad que observa una vida y la senala.",
+            "Sostiene dignamente a tus pastores. Orar por los seminaristas y por quienes estan en proceso de candidatura es una forma concreta de honrar el pastoreo.",
+            "Cuando se evaluara a un candidato, recuerda el criterio: cuatro dimensiónes, no una. Un examen que se pasiva no es un examen."
+          ],
+          "cierre": "Cristo provee pastores y maestros para perfecciónar a los santos. Oramos por los seminaristas y por toda la obra del ministerio."
+        },
+        {
+          "num": 9,
+          "titulo": "El Consitorio y la Junta Diaconal",
+          "arts": [
+            "Arts. 78 - 80, 94 - 100"
+          ],
+          "articulos": [
+            {
+              "n": 94,
+              "texto": "El Consitorio es el consejo que ejerce jurisdicción sobre la iglesia local... integrado por el pastor o pastores de la iglesia y por sus presbíteros regentes en funciónes..."
+            },
+            {
+              "n": "95, 98",
+              "texto": "Presidido por el pastor. Quorum de 2/3 de sus miembros en ejercicio."
+            },
+            {
+              "n": 100,
+              "texto": "Son atribuciónes y deberes del Consitorio: 1. Ejercer el gobierno... 2. Administrar economía... 4. Admitir, disciplinar y aceptar o rechazar traslados... 6. Guiar elecciónes de oficiales..."
+            },
+            {
+              "n": "78-80",
+              "texto": "La Junta Diaconal (conformada por diáconos y el pastor), bajo la autoridad directa del Consitorio.",
+              "nota": "Regulación de la organización diaconal y de la rendición de cuentas."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "1 Timoteo 5.17",
+              "texto": "Los ancianos que gobiernan bien sean tenidos por dignos de doble honor, mayormente los que trabajan en predicar y ensenar.",
+              "nota": "Consitorio."
+            },
+            {
+              "ref": "1 Corintios 12.28",
+              "texto": "Y en la iglesia, Dios ha designado... los que prestan ayuda, los que administran...",
+              "nota": "Junta Diaconal."
+            }
+          ],
+          "Introducción": "El gobierno de la iglesia local es pastoral y colegiado. El sistema existe precisamente para prevenir el personalismo: cuando el gobierno es de uno solo, la iglesia queda a merced de su caracter.",
+          "desarrollo": [
+            "El Artículo 94 define al Consitorio como el consejo que ejerce jurisdicción sobre la iglesia local, integrado por el pastor o pastores de la iglesia y por sus presbíteros regentes en funciónes. La composición es clave: mezcla el oficio docente (Pastor) con el oficio regente. No es un consejo de una sola voz.",
+            "Los artículos 95 y 98 establecen que el Consitorio es presidido por el pastor y que funcióna con quorum de dos tercios de sus miembros en ejercicio. La presidencia del pastor no es un acto de autoritarismo: es el recordatorio del principio de 1 Timoteo 5.17 — los que gobiernan bien sean tenidos por dignos de doble honor. El pastor preside; el Presbítero Regente gobierna con el; y el quorum de dos tercios garantiza que ninguna decisión se tome por un solo voto.",
+            "El Artículo 100 enumera las atribuciónes y deberes del Consitorio, entre las que destacan: ejercer el gobierno, administrar la economía, admitir, disciplinar y aceptar o rechazar traslados, y guiar las elecciónes de oficiales. El programa original mencióna que son 33 atribuciónes principales. La presencia simultanea de admitir y disciplinar en la misma lista revela el doble rostro del Consitorio: es a la vez la puerta de entrada y el tribunal de primera instancia.",
+            "Los artículos 78 a 80 regulan la Junta Diaconal, formada por diáconos y el pastor, bajo la autoridad directa del Consitorio. La subordinación es explicita: la Junta no es un gobierno paralelo sino una instancia de servicio dentro del gobierno consular. Su organización incluye la rendición de cuentas, lo que garantiza transparencia."
+          ],
+          "Aplicación": [
+            "Apoya y acata los acuerdos del Consitorio en la conducción del templo y en la vida de la comunidad. Acatar no es sumisión servil: es reconocer un gobierno colegiado.",
+            "Si eres diácono, tu función bajo el Consitorio es de servicio y administración con rendición de cuentas. Esa combinación es un modelo de integridad.",
+            "Cuando haya una decisión del Consitorio que te parezca equivocada, recurre a la vía instituciónal (recurso, apelación — Libro VI), no a la vía de la crítica pública."
+          ],
+          "cierre": "Un Consitorio sabio y diáconos solicitos traen paz y crecimiento. Oramos por nuestras autoridades locales."
+        },
+        {
+          "num": 10,
+          "titulo": "Los Consejos Superiores: Presbiterio, Sinodo y Asamblea General",
+          "arts": [
+            "Arts. 85 - 93, 101 - 122"
+          ],
+          "articulos": [
+            {
+              "n": 85,
+              "texto": "La IGLESIA PRESBITERIANA DE CHILE es dirigida por los consejos... el Consitorio, el Presbiterio, el Sinodo y la Asamblea General..."
+            },
+            {
+              "n": "101, 107",
+              "texto": "Presbiterio: Unión de 3 o más iglesias locales; ordena pastores, examina libros de Consitorios y vela por el orden regional."
+            },
+            {
+              "n": "108, 114",
+              "texto": "Sinodo: Unión de 3 o más Presbiterios; organiza presbiterios y orienta la educación teológica."
+            },
+            {
+              "n": "115, 122",
+              "texto": "Asamblea General: Formada por representantes de todos los Presbiterios; dicta políticas nacionales, resguarda los estatutos y representa legalmente a la iglesia."
+            },
+            {
+              "n": "85-93",
+              "texto": "[Principios generales conciliares y Comisiónes Ejecutivas — texto del Estatuto a verificar. El programa los senala como tema sin reproducir su redacción.]"
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Hechos 15.2, 6",
+              "texto": "...los apóstoles y los ancianos se reunieron para examinar este asunto.",
+              "nota": "Concilios superiores / Conexionalismo."
+            },
+            {
+              "ref": "1 Timoteo 4.14",
+              "texto": "...la imposición de las manos del presbiterio.",
+              "nota": "Autoridad conciliar."
+            }
+          ],
+          "Introducción": "La iglesia no está fragmentada. Las congregaciónes locales se unen en concilios para apoyarse mutuamente y velar por la pureza doctrinal. La pertenencia a una iglesia nacional unida por la misma fe y el mismo estatuto es parte de la identidad del creyente.",
+          "desarrollo": [
+            "El Artículo 85 enuncia el principio del conexionalismo presbiteriano: la Iglesia Presbiteriana de Chile es dirigida por los consejos — Consitorio, Presbiterio, Sinodo y Asamblea General. Esta enumeración es una escalera de autoridad que va de lo local a lo nacional, y de lo ejecutivo a lo legislativo.",
+            "El Presbiterio (artículos 101 y 107) es la unión de tres o más iglesias locales. Sus funciónes son tres: ordenar pastoralmente, examinar los libros de los Consitorios de sus iglesias, y velar por el orden regional. La segunda función — examinar libros — es significativa: el Presbiterio no interviene en la vida interna de una iglesia local, pero si supervisa sus cuentas y sus procedimientos.",
+            "El Sinodo (artículos 108 y 114) es la unión de tres o más Presbiterios. Organiza presbiterios y orienta la educación teológica. Aquí el poder se desplaza desde lo disciplinario hacia lo formativo: el Sinodo tiene encomienda sobre la educación teológica de la iglesia.",
+            "La Asamblea General (artículos 115 y 122) está formada por representantes de todos los Presbiterios. Es el organo supremo: dicta políticas nacionales, resguarda los Estatutos y representa legalmente a la iglesia. El artículo 122 define su competencia como documento supremo.",
+            "La organización de comisiónes ejecutivas en los artículos 85 al 93 tiene por función hacer operable esta estructura. Sin comisiónes, un consejo con funciónes tan amplias seria ineficiente; con ellas, se distribuyen las tareas concretas sin perder la responsabilidad del consejo como cuerpo."
+          ],
+          "Aplicación": [
+            "Comprende que perteneces a una iglesia nacional unida por la misma fe y estatuto. Esta identidad no es administrativa: es teológica.",
+            "Si eres parte de una comisión ejecutiva, recuerda que tu trabajo representa a un consejo con autoridad dada por el Espiritu Santo. Actua con la misma seriedad con que predicas.",
+            "Cuando se convoque un Sinodo o una Asamblea General, participa o informate de sus resoluciónes: te afectan directamente."
+          ],
+          "cierre": "La unidad conciliar protege a la iglesia del error y del aislamiento. Oramos por la Asamblea General y por los Sinodos."
+        }
+      ]
+    },
+    {
+      "numero": 3,
+      "libro": "Libro Sexto",
+      "titulo": "De la Disciplina Eclesiástica",
+      "articulos": "Arts. 123 al 247",
+      "fundamento": {
+        "ref": "Galatas 6.1",
+        "texto": "Hermanos, si alguien es sorprendido en alguna falta, ustedes que son espirituales, restaureenlo en un espiritu de mansedumbre, mirandote a ti mismo, no sea que tu también seas tentado.",
+        "nota": "El pasaje refleja el espiritu central de la disciplina reformada: defender la gloria de Cristo y la pureza de la iglesia, pero actuando con prudencia, justicia y amor enfocado en la restauración del hermano."
+      },
+      "objetivoGeneral": "Instruir sobre la naturaleza, procedimientos y fines espirituales de la disciplina eclesiástica, promoviendo la justicia, el debido proceso, la preservación de la verdad y la restauración del creyente.",
+      "lecciónes": [
+        {
+          "num": 11,
+          "titulo": "Principios, fines de la Disciplina y naturaleza de las ofensas",
+          "arts": [
+            "Arts. 123 - 130"
+          ],
+          "articulos": [
+            {
+              "n": 123,
+              "texto": "La disciplina es el ejercicio ordenado y oportuno de la autoridad conferida a la Iglesia por nuestro Senor Jesucristo... para su edificación..."
+            },
+            {
+              "n": 124,
+              "texto": "El fin de la disciplina eclesiástica es defender la verdad y restablecer la gloria y autoridad de Cristo... mediante la remoción y supresión del escandalo... la conservación de la pureza de la doctrina... y el arrepentimiento del o los ofensores."
+            },
+            {
+              "n": "125, 126",
+              "texto": "Uso de prudencia, amor, discreción y garantía irrenunciable del derecho a la defensa sin comisiónes especiales."
+            },
+            {
+              "n": 127,
+              "texto": "Ofensa es todo aquello que es contrario a las Sagradas Escrituras y a la doctrina expresada en los simbolos de fe..."
+            },
+            {
+              "n": "127-130",
+              "texto": "[Faltas conciliares — texto del Estatuto a verificar. El programa senala este rango sin reproducir su redacción.]"
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Hebreos 12.6",
+              "texto": "Porque el Senor al que ama, disciplina, y azota a todo el que recibe por hijo.",
+              "nota": "Proposito amoroso de la disciplina."
+            },
+            {
+              "ref": "1 Corintios 5.12-13",
+              "texto": "Remoción del escandalo para preservar la pureza del cuerpo.",
+              "nota": "Pureza de la iglesia."
+            },
+            {
+              "ref": "Mateo 18.15",
+              "texto": "Corrección privada inicial para ganar al hermano.",
+              "nota": "Secuencia pastoral."
+            }
+          ],
+          "Introducción": "La disciplina no es venganza humana. Es un medio de gracia para recuperar al pecador y honrar a Cristo. Quien mira la disciplina sin esta perspectiva solo ve la dureza; quien la mira desde el amor de Galatas 6.1 ve la restauración.",
+          "desarrollo": [
+            "El Artículo 123 define la disciplina como el ejercicio ordenado y oportuno de la autoridad conferida a la Iglesia por Jesucristo, para la edificación. Tres palabras definen el caracter de la disciplina: ordenada (hay un procedimiento), oportuna (hay un momento), y para la edificación (hay un fin). La disciplina no es un castigo: es un metodo.",
+            "El Artículo 124 enumera los fines de la disciplina: defender la verdad, restablecer la gloria y autoridad de Cristo, remover y suprimir el escandalo, conservar la pureza de la doctrina, y lograr el arrepentimiento del ofensor. Estos fines estan en tensión unos con otros — defender la verdad puede no ser lo mismo que remover el escandalo — y el Estatuto los presenta como un conjunto que la prudencia debe equilibrar.",
+            "Los artículos 125 y 126 condiciónan la disciplina con prudencia, amor y discreción, y garantizan el derecho a la defensa sin comisiónes especiales. La comisión especial que se prohibe es aquel procedimiento ad hoc que se crea para juzgar a una persona específica sin la garantía del debido proceso. La prohibición es antigua y sobrevive: evita el juicio sumarisimo.",
+            "El Artículo 127 define la ofensa como todo aquello que es contrario a las Sagradas Escrituras y a la doctrina expresada en los simbolos de fe. Esta definición tiene un alcance amplio y un punto exacto: la ofensa se define objetivamente (por la norma), no subjetivamente (por la percepción de alguien). Los artículos 127 a 130 — las faltas conciliares — deben verificarse en el Estatuto.",
+            "Mateo 18.15 ofrece la secuencia pastoral que subyace a todo el Libro VI: la corrección privada inicial, para ganar al hermano. El orden de Galatas 6.1 — mirandote a ti mismo — anade la humildad del que corrige como primera condición."
+          ],
+          "Aplicación": [
+            "Ver la disciplina con madurez espiritual, sometiendonos al consejo cuando sea necesario. La humildad de Galatas 6.1 empieza por el que corrige.",
+            "Rechaza los chismes. El Artículo 123 define la disciplina como un procedimiento ordenado: lo que no pasa por el procedimiento no es disciplina, es conversación de pasillo.",
+            "Antes de juzgar a alguien, preguntate si lo que ha hecho es ofensa según el Artículo 127 (contra Escritura y simbolos de fe) o solo una molestia que no cumple esa definición."
+          ],
+          "cierre": "La disciplina busca reflejar la santidad de Dios. Se ora pidiendo humildad y pureza, y por quienes pasan por este proceso con la gracia de Dios."
+        },
+        {
+          "num": 12,
+          "titulo": "Tribunales Eclesiasticos, Inhabilidades y Competencia",
+          "arts": [
+            "Arts. 131 - 159"
+          ],
+          "articulos": [
+            {
+              "n": 131,
+              "texto": "Son tribunales los consejos establecidos en este estatuto cuando han sido convocados para fines judiciales..."
+            },
+            {
+              "n": "133, 134",
+              "texto": "Elección de Comisiónes Judiciales (mínimo 5 jueces, equilibrio entre pastores y regentes)."
+            },
+            {
+              "n": 144,
+              "texto": "Seran inhabiles como miembros de un tribunal... a) El conyuge y parientes... b) Quien tuviere interés personal... c) Quien hubiese intervenido en la instancia inferior... e) Quien hubiese manifestado su opinión..."
+            },
+            {
+              "n": "155-158",
+              "texto": "Competencia: Consitorio juzga a miembros y oficiales locales; Presbiterio a sus pastores y Consistorios; Sinodo y Asamblea General a sus directivos inferiores y apelaciónes."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Deuteronomio 19.15",
+              "texto": "No prevalecera un solo testigo contra una persona... sobre el testimonio de dos o tres testigos se mantendra el caso.",
+              "nota": "Exigencia probatoria y de justicia."
+            },
+            {
+              "ref": "1 Timoteo 5.19",
+              "texto": "No admitas acusación contra un anciano, a menos de que haya dos o tres testigos.",
+              "nota": "Competencia y cuidado procesal."
+            }
+          ],
+          "Introducción": "La imparcialidad en los juzgamientos garantiza que las decisiónes se tomen conforme a la verdad y no por favoritismos. Cuando el juez es pariente, interesado o abogado del acusado, la justicia se ha terminado antes de empezar.",
+          "desarrollo": [
+            "El Artículo 131 define que es un tribunal eclesiástico: son los consejos establecidos en el Estatuto cuando han sido convocados para fines judiciales. Es decir, no hay un tribunal separado — el mismo Consitorio que gobierna juzga cuando se convoca con ese proposito. La naturaleza del proceso está garantizada por el principio de debido proceso.",
+            "Los artículos 133 y 134 regulan la elección de las Comisiónes Judiciales: mínimo cinco jueces, con equilibrio entre pastores y regentes. El numero mínimo de cinco protege contra decisiónes de dos o tres personas. El equilibrio entre los dos tipos de oficios protege contra que el criterio de un solo tipo de lider domine el proceso.",
+            "El Artículo 144 enumera las causales de inhabilidad que el programa reproduce: a) el conyuge y parientes; b) quien tuviera interés personal; c) quien hubiera intervenido en la instancia inferior; d) quien hubiera manifestado su opinión. La última causal es especialmente interesante: haber manifestado su opinión publicamente impide luego juzgar con apariencia de imparcialidad. Es el fundamento del principio que nadie puede ser juez en su propia causa.",
+            "Los artículos 155 a 158 establecen la competencia por nivel. El Consitorio juzga a miembros y oficiales locales. El Presbiterio juzga a sus pastores y a los Consistorios de sus iglesias. El Sinodo y la Asamblea General juzgan a sus directivos inferiores y a las apelaciónes. Esta estructura crea una jerarquía de instancias: ninguna persona es juzgada por un tribunal sin competencia sobre ella."
+          ],
+          "Aplicación": [
+            "Rechaza los chismes y confia en las instancias formales de la iglesia. Un juicio emitido por los pasillos no es una decisión eclesiástica: es una calumnia.",
+            "Cuando seas citado a un tribunal, recuerda que el procedimiento garantiza tu derecho a defensa (Artículos 125-126) y que puede haber exclusión si existe causal de inhabilidad en quien te juzga (Artículo 144).",
+            "Orar por los jueces conciliares es un deber: sus decisiónes afectan la vida de personas reales."
+          ],
+          "cierre": "El Dios justo exige tribunales que actuen con equidad estricta. Oramos por la sabiduría de los jueces conciliares."
+        },
+        {
+          "num": 13,
+          "titulo": "Sanciónes o Censuras Eclesiasticas",
+          "arts": [
+            "Arts. 160 - 174"
+          ],
+          "articulos": [
+            {
+              "n": "161, 162",
+              "texto": "Ponderación estricta de Circunstancias Atenuantes (arrepentimiento, poca experiencia, confesión voluntaria) y Agravantes (reincidencia, arrogancia, contumacia)."
+            },
+            {
+              "n": 164,
+              "texto": "Sanciónes a personas: a) Amonestación. b) Suspensión (privación temporal de derechos o del oficio hasta por 2 años). c) Destitución (termino definitivo del ejercicio del oficio). d) Exclusión (eliminación del Rol Nacional por contumacia)."
+            },
+            {
+              "n": 169,
+              "texto": "Sanciónes a consejos: Represión, Intervención y Disolución."
+            },
+            {
+              "n": "164-174",
+              "texto": "[Definición completa de amonestación, suspensión, destitución, exclusión, represión, intervención y disolución — el programa enumera las sanciónes sin reproducir su redacción literal. Verificar en el Estatuto.]"
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Tito 3.10",
+              "texto": "Al hombre que cause divisiónes, después de la primera y segunda amonestación, deseche...",
+              "nota": "Amonestación y censura gradual."
+            },
+            {
+              "ref": "1 Corintios 5.5",
+              "texto": "...el tal sea entregado a Satanas para la destrucción de la carne, a fin de que su espiritu sea salvo...",
+              "nota": "Exclusión buscando la restauración."
+            }
+          ],
+          "Introducción": "Las penas eclesiasticas no son castigos civiles. Son censuras espirituales graduadas con misericordia y firmeza. La escala existe para que la respuesta a la ofensa sea proporciónada a su gravedad.",
+          "desarrollo": [
+            "Los artículos 161 y 162 obligan al tribunal a ponderar las circunstancias atenuantes y agravantes antes de fijar la sanción. Las atenuantes son: arrepentimiento, poca experiencia, confesión voluntaria. Las agravantes son: reincidencia, arrogancia, contumacia. Esta ponderación es lo que distingue la disciplina reformada de un proceso puramente mecanico. Un tribunal que no pondera estas circunstancias no está aplicando el Estatuto: está aplicando un automatismo.",
+            "El Artículo 164 establece las cuatro sanciónes aplicables a las personas, en orden de gravedad creciente. La amonestación es la más leve: una advertencia. La suspensión es la privación temporal de derechos o del oficio por hasta dos años. La destitución es el termino definitivo del ejercicio del oficio. La exclusión es la eliminación del Rol Nacional por contumacia. La progresión importa: la amonestación es siempre el primer paso, incluso cuando el caso parece grave.",
+            "El Artículo 169 establece las sanciónes aplicables a los consejos — no a personas sino a órganos eclesiasticos: represión, intervención y disolución. La lógica es la misma que para las personas, adaptada a una realidad colectiva. Un consejo que falla es reprendido antes de intervenirse, y es intervenido antes de disolverse.",
+            "La gradualidad de la escala tiene un Fundamento bíblico que excede el Estatuto. Tito 3.10 establece la secuencia de la amonestación privada (primera y segunda), y solo después el desecho. La intención es clara: la disciplina no busca la censure como fin, busca el arrepentimiento y la restauración."
+          ],
+          "Aplicación": [
+            "Reconoce la gravedad del pecado contumaz. La contumacia es la que impide la restauración (Artículos 162 y 164 d).",
+            "Valora la amonestación oportuna para no caer en faltas mayores. Amonestar a tiempo es un acto de amor, no de dureza.",
+            "Cuando seas notificado de una medida disciplinaria, no la recibas como un ataque: recurre por los medios legales (Recursos, Libro VI). Es tu derecho, y usarlo no es desafiar el proceso."
+          ],
+          "cierre": "La disciplina censura el pecado pero busca siempre ganar al pecador. Oramos por arrepentimiento y perdon."
+        },
+        {
+          "num": 14,
+          "titulo": "Los Procedimientos Judiciales (Ordinario y Extraordinario)",
+          "arts": [
+            "Arts. 175 - 227"
+          ],
+          "articulos": [
+            {
+              "n": 191,
+              "texto": "Inicio del proceso por Queja (acusación del ofendido), Denuncia (de un tercero/consejo) o Vindicación (solicitud de investigación personal ante rumores falsos)."
+            },
+            {
+              "n": "213-225",
+              "texto": "Procedimiento Ordinario — Audiencia Preparatoria: lectura de acusación, descargos escritos (5 días antes), excepciónes, llamado obligatorio a conciliación y fijación de prueba. Audiencia de Juicio: rendición de prueba (documental, confesional, testimonial bajo juramento solemne a Dios y alegatos). Apreciación según la sana crítica."
+            },
+            {
+              "n": 226,
+              "texto": "Procedimiento Extraordinario: Aplica en caso de confesión explicita, contumacia o renuncia a defenderse."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "Proverbios 18.17",
+              "texto": "El primero en presentar su caso parece tener la razon, hasta que viene su próximo y lo examina.",
+              "nota": "Audiencias e investigación justa."
+            },
+            {
+              "ref": "Exodo 20.16",
+              "texto": "No daras falso testimonio contra tu próximo.",
+              "nota": "Juramento de testigos y sanciónes a difamadores."
+            }
+          ],
+          "Introducción": "El debido proceso judicial garantiza que nadie sea juzgado injustamente ni sin ser escuchado. El Estatuto no instruye sobre como juzgar a una persona, sino sobre como construir un proceso que la proteja.",
+          "desarrollo": [
+            "El Artículo 191 establece las tres vias de inicio de un proceso: la queja (acusación del ofendido), la denuncia (de un tercero o un consejo) y la vindicación (solicitud de investigación personal ante rumores falsos). La diferencia entre las tres es fundamental: la queja y la denuncia buscan un castigo; la vindicación busca limpiar un nombre. Quien ha acusado falsamente puede vindicarse.",
+            "El procedimiento ordinario (artículos 213 a 225) tiene dos audiencias. La audiencia preparatoria incluye: lectura de la acusación, presentación de descargos escritos (con cinco días de anticipación), excepciónes, el llamado obligatorio a conciliación, y la fijación de la prueba. La audiencia de juicio incluye: rendición de prueba (documental, confesional, testimonial bajo juramento solemne a Dios) y alegatos. La prueba se aprecia según la sana crítica. El uso de sana crítica es clave: el juez no aplica reglas mecanicas, sino un juicio equitativo sobre el conjunto de la prueba.",
+            "El procedimiento extraordinario (Artículo 226) aplica en tres casos: confesión explicita, contumacia o renuncia a defenderse. En los tres, el proceso se simplifica porque la defensa ya no puede aportar nada: el acusado ha dicho — su propia confesión, o su negativa a defenderse — sustituyen la etapa probatoria.",
+            "Los artículos 213 a 227 completan el procedimiento ordinario con el desarrollo detallado de las dos audiencias, la recepción de pruebas legitimas y el procedimiento extraordinario por confesión. Proverbios 18.17 — el primero en presentar su caso parece tener la razon, hasta que viene su próximo y lo examina — es el fundamento de la necesidad de la contradicción. Exodo 20.16 fundamenta el juramento de los testigos."
+          ],
+          "Aplicación": [
+            "Respeta los tiempos procesales (cinco días para los descargos, plazos de citación). El plazo no es un tecnicismo: es la garantía de que puedes preparar tu defensa.",
+            "Evita emitir juicios apresurados sin pruebas. Proverbios 18.17 es una advertencia contra el primer testimonio que parece verdad.",
+            "Confronta rumores sobre un miembro. Si has oido algo que puede danar su nombre, el Artículo 191 ofrece la vía de la vindicación — no solo para el, sino como deber de todos."
+          ],
+          "cierre": "La verdad debe prevalecer mediante procedimientos claros y transparentes. Se ora por la verdad en todo proceso, y por los que pasan por el con gracia."
+        },
+        {
+          "num": 15,
+          "titulo": "Recursos, Reivindicación, Prescripción y Restauración",
+          "arts": [
+            "Arts. 230 - 247"
+          ],
+          "articulos": [
+            {
+              "n": 230,
+              "texto": "Reposición: Recurso ante el mismo tribunal en plazo de 5 días para resoluciónes no definitivas."
+            },
+            {
+              "n": "231, 232",
+              "texto": "Apelación: Recurso contra sentencia definitiva ante el consejo superior inmediato en plazo de 10 días."
+            },
+            {
+              "n": 237,
+              "texto": "Revisión: Recurso ante Sinodo o Asamblea General en plazo de 30 días habiles."
+            },
+            {
+              "n": 241,
+              "texto": "Reivindicación: Restablecimiento público de la honra de un exculpado con sentencia absolutoria."
+            },
+            {
+              "n": "243-246",
+              "texto": "Restauración: Restitución del sanciónado arrepentido. En pastores es gradual: primero Santa Cena, luego licencia para predicar y finalmente reintegro."
+            },
+            {
+              "n": 247,
+              "texto": "Prescripción: Plazo de 1 año desde el conocimiento de la falta o máximo 2 años desde su comisión para iniciar proceso."
+            }
+          ],
+          "biblia": [
+            {
+              "ref": "2 Corintios 2.6-8",
+              "texto": "Suficiente para tal persona es este castigo... asi que, por el contrario, ustedes más bien deben perdonarlo y consolarlo... confirmar su amor hacia el.",
+              "nota": "Restauración."
+            },
+            {
+              "ref": "Galatas 6.1",
+              "texto": "...restaureenlo en un espiritu de mansedumbre...",
+              "nota": "Restauración."
+            }
+          ],
+          "Introducción": "El fin último de toda la estructura disciplinaria es la gloriosa restauración del pecador arrepentido y la vindicación del inocente. Lo que empezo como un tribunal termina, si Dios es fiel, en un banquete de gracia.",
+          "desarrollo": [
+            "Los tres recursos tienen plazos y autoridades distintos. La reposición (Artículo 230) es el recurso ante el mismo tribunal, en 5 días, para resoluciónes no definitivas. La apelación (artículos 231-232) es el recurso contra la sentencia definitiva ante el consejo superior inmediato, en 10 días. La revisión (Artículo 237) es el recurso ante el Sinodo o la Asamblea General, en 30 días habiles. Esta estructura de tres niveles garantiza que una decisión no es definitiva hasta que ha sido vista en todas las instancias.",
+            "El Artículo 241 regula la reivindicación: el restablecimiento público de la honra de un exculpado. Es la contracara indispensable de la disciplina. Si la iglesia puede excluir a alguien pero no puede limpiarlo cuando se demuestra su inocencia, su sistema de justicia es incompleto. El artículo 241 cierra ese circulo.",
+            "Los artículos 243 a 246 regulan la restauración: la restitución del sanciónado arrepentido. En el caso de los pastores, la restauración es gradual: primero se le admite a la Santa Cena, luego se le licencia para predicar, y finalmente se le reintegra al ejercicio pleno. La gradualidad refleja 2 Corintios 2.6-8 — suficiente para tal persona es este castigo, y ahora deben perdonarlo y consolarlo. La restauración no es un retorno binario, sino un camino de etapas.",
+            "El Artículo 247 establece la prescripción: un plazo de un año desde el conocimiento de la falta, o un máximo de dos años desde su comisión, para iniciar proceso. La prescripción es una garantía de justicia: pasa un tiempo en que los hechos se prescriben y no pueden ya ser perseguidos. Es el limite temporal que acompana al limite material de la gracia.",
+            "Juntando las tres piezas — impugnación, reivindicación y restauración — se obtiene el sistema completo: la iglesia puede castigar, puede limpiar al inocente, puede restaurar al arrepentido, y todo dentro de plazos que protegen a todas las partes."
+          ],
+          "Aplicación": [
+            "Perdonar de corazon y acoger con gozo al hermano que ha sido restaurado por el Senor y la iglesia. La restauración es una fiesta, no una tacha.",
+            "Si has sido exculpado, el Artículo 241 te da derecho a la reivindicación. Ejerce ese derecho: no es venganza, es verdad.",
+            "Si has sido sanciónado y te arrepientes, el proceso del Artículo 243-246 es real y gradual. El arrepentimiento no pierde su derecho a la restauración."
+          ],
+          "cierre": "La disciplina que comenzo defendiendo la santidad termina manifestando el triunfo de la gracia, el perdon y la restauración en la casa de Dios. Se concluye el programa elevando una oración de gratitud por la Iglesia Presbiteriana de Chile, sus ministros, sus concilios y todo su pueblo."
+        }
+      ]
+    }
+  ]
+};
+const KEY = 'cuaderno-westminster-notas-v1';
+const PROG = 'cuaderno-westminster-progreso-v1';
+
+let notas = {};
+let prog = {};
+try { notas = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+try { prog = JSON.parse(localStorage.getItem(PROG) || '{}'); } catch(e) {}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function vers(ref, texto, nota){
+  return '<div class="vers"><div class="vr">'+esc(ref)+'</div><div class="vt">"'+esc(texto)+'"</div>'+
+         (nota?'<div class="vn">'+esc(nota)+'</div>':'')+'</div>';
+}
+
+function render(){
+  const D = DATOS;
+  let h = '';
+
+  // ---- toc ----
+  let toc = '';
+  toc += '<div class="toc"><div class="mod">Contenido</div>';
+  toc += '<a href="#portada">Portada</a>';
+  toc += '<a href="#propositos">PropÃ³sitos del cuaderno</a>';
+  toc += '<a href="#como-usar">Como usar este libro</a>';
+  D.modulos.forEach(m=>{
+    toc += '<div class="mod">Modulo '+m.numero+' &middot; '+esc(m.libro)+'</div>';
+    m.lecciónes.forEach(l=>{
+      toc += '<a class="lec" href="#L'+l.num+'">'+l.num+'. '+esc(l.titulo)+'</a>';
+    });
+  });
+  toc += '<div class="mod">Cierre</div>';
+  toc += '<a href="#oracion">Oración final</a>';
+  toc += '</div>';
+  document.getElementById('toc').innerHTML = toc;
+
+  // ---- portada ----
+  h += '<header class="portada" id="portada">';
+  h += '<img src="data:image/png;base64,'+LOGO_VERTICAL+'" alt="">';
+  h += '<h1>'+esc(D.datos.tema)+'</h1>';
+  h += '<div class="sub">Cuaderno de Estudio &middot; Libro Interactivo</div>';
+  h += '<div class="lema">"'+esc(D.datos.lema)+'"</div>';
+  h += '<div class="lema-src">' + esc(D.datos.fundamentoGeneral) + '</div>';
+      h += '<div class="dn2">' + esc(D.datos.iglesia) + '</div>';
+      h += '<div class="ig2" style="font-size:14px">' + esc(D.datos.denominacion) + '</div>';
+  h += '<div class="pr2"><span class="rol">Documento</span><span class="nom">Confesión de Fe de Westminster</span></div>';
+  h += '<div class="sub" style="margin-top:12px">'+esc(D.datos.anio)+'</div>';
+  h += '</header><div class="wrapinner">';
+
+  // ---- propositos ----
+  h += '<section id="propositos"><h2 class="sec"><span class="n">Presentacion</span>PropÃ³sitos del cuaderno</h2>';
+  h += '<div class="obj"><h3>Objetivo general</h3><p>'+esc(D.objetivoGeneral)+'</p></div>';
+  h += '<div class="obj"><h3>Objetivos especificos</h3><ol>';
+  D.objetivosEspecificos.forEach(o=>{ h+='<li>'+esc(o)+'</li>'; });
+  h += '</ol></div></section>';
+
+  // ---- como usar ----
+  h += '<section id="como-usar"><h2 class="sec"><span class="n">Guia</span>Como usar este libro</h2>';
+  h += '<p class="lead">Cada lección sigue la misma estructura, pensada para el estudio personal y para la clase en la EBD.</p>';
+  h += '<div class="apl"><ul>';
+  h += '<li><b>Texto de la Confesión.</b> El contenido del capítulo, citado por secciones.</li>';
+  h += '<li><b>Referencias bíblicas.</b> Indicaciones sobre las citas y fundamentos bÃ­blicos presentes en el capítulo.</li>';
+  h += '<li><b>Introducción y Desarrollo.</b> OrientaciÃ³n para la lectura y el texto completo del capítulo para su estudio.</li>';
+  h += '<li><b>Aplicación.</b> Preguntas para reflexionar y aplicar lo estudiado.</li>';
+  h += '<li><b>Oración final.</b> Para cerrar el tiempo de estudio.</li>';
+  h += '<li><b>Notas de estudio.</b> Escribe lo que quieras recordar. Se guarda solo en este navegador.</li>';
+  h += '</ul></div>';
+  h += '<div class="apl"><ul>';
+  h += '';
+  h += '<li>Marca la capítulo como leído con la casilla superior. Tu avance se guarda en este navegador.</li>';
+  h += '</ul></div>';
+  h += '<p class="lead" style="margin-top:20px">Imprime con Ctrl+P si prefieres estudiar en papel.</p>';
+  h += '</section>';
+
+  // ---- modulos ----
+  D.modulos.forEach(m=>{
+    h += '<section id="M'+m.numero+'">';
+    h += '<div class="modhead"><div class="mk">Modulo '+m.numero+'</div>';
+    h += '<h2>'+esc(m.libro)+': '+esc(m.titulo)+'</h2>';
+    h += '<div class="arts">Articulos '+esc(m.articulos)+'</div></div>';
+
+    h += '<h3 class="sub">Fundamento bíblico del modulo</h3>';
+    h += vers(m.fundamento.ref, m.fundamento.texto, m.fundamento.nota);
+
+    h += '<h3 class="sub">Objetivo general del modulo</h3>';
+    h += '<p class="par">'+esc(m.objetivoGeneral)+'</p>';
+
+    m.lecciónes.forEach(l=>{
+      h += '<section id="L'+l.num+'" class="lec">';
+      h += '<div class="prog"><div class="pl">Capítulo '+l.num+' de '+D.modulos[0].lecciónes.length+'</div>';
+      h += '<div class="bar"><div class="fill" id="f'+l.num+'"></div></div>';
+      h += '<div class="pc" id="p'+l.num+'"></div>';
+      h += '<button type="button" onclick="marcar('+l.num+')" id="b'+l.num+'">Marcar como leído</button></div>';
+
+      h += '<h2 class="sec"><span class="n">Capítulo '+l.num+' &middot; '+esc(l.arts.join('   '))+'</span>'+esc(l.titulo)+'</h2>';
+
+      h += '<h3 class="sub">Texto de la Confesión</h3>';
+      l.articulos.forEach(a=>{
+        h += '<div class="art"><div class="an">Articulo '+esc(a.n)+'</div>';
+        h += '<p>'+esc(a.texto)+'</p>';
+        if (a.nota) h += '<div class="falt" style="background:#f2f8fc;border-left-color:#29abe2;color:#3a4a5a"><b style="color:#29abe2">Nota:</b> '+esc(a.nota)+'</div>';
+        h += '</div>';
+      });
+
+      h += '<h3 class="sub">Referencias bíblicas</h3>';
+      l.biblia.forEach(b=>{ h += vers(b.ref, b.texto, b.nota); });
+
+      h += '<h3 class="sub">Introducción</h3>';
+      h += '<p class="par">'+esc(l.Introducción)+'</p>';
+
+      h += '<h3 class="sub">Desarrollo</h3>';
+      l.desarrollo.forEach(d=>{ h += '<p class="par">'+esc(d)+'</p>'; });
+
+      h += '<h3 class="sub">Aplicación</h3>';
+      h += '<div class="apl"><ul>';
+      l.Aplicación.forEach(a=>{ h += '<li>'+esc(a)+'</li>'; });
+      h += '</ul></div>';
+
+      h += '<h3 class="sub">Oración final</h3>';
+      h += '<div class="orar"><span class="lbl">Para cerrar el tiempo de estudio</span>'+esc(l.cierre)+'</div>';
+
+      h += '<div class="notas"><div class="nl">Notas de estudio &middot; Capítulo '+l.num+'</div>';
+      h += '<textarea id="n'+l.num+'" placeholder="Escribe aquí lo que quieras recordar de este capítulo..."></textarea>';
+      h += '<div class="saved" id="s'+l.num+'"></div></div>';
+
+      h += '</section>';
+    });
+    h += '</section>';
+  });
+
+  // ---- cierre ----
+  h += '<section id="oracion"><h2 class="sec"><span class="n">Cierre</span>Oración final</h2>';
+  h += '<div class="orar" style="font-size:17px">A Dios sea la gloria por su Palabra y su verdad. AmÃ©n.</div>';
+  h += '<p class="lead">Que el SeÃ±or nos conceda comprender y vivir conforme a las Sagradas Escrituras.</p>';
+  h += '</section>';
+
+  document.getElementById('contenido').innerHTML = h;
+  restaurar();
+}
+
+function marcar(n){
+  prog[n] = !prog[n];
+  localStorage.setItem(PROG, JSON.stringify(prog));
+  pintarProgreso(n);
+}
+function pintarProgreso(n){
+  const done = prog[n] ? 1 : 0;
+  const f = document.getElementById('f'+n);
+  const p = document.getElementById('p'+n);
+  const b = document.getElementById('b'+n);
+  if (!f) return;
+  f.style.width = (done*100)+'%';
+  p.textContent = done ? 'LeÃ­do' : 'Pendiente';
+  p.style.color = done ? '#5a8a3d' : '#8894a4';
+  b.textContent = done ? 'Marcar como pendiente' : 'Marcar como leído';
+  b.style.borderColor = done ? '#5a8a3d' : '';
+  b.style.color = done ? '#5a8a3d' : '';
+}
+
+function guardarNota(n){
+  const el = document.getElementById('n'+n);
+  if (!el) return;
+  notas[n] = el.value;
+  localStorage.setItem(KEY, JSON.stringify(notas));
+  const s = document.getElementById('s'+n);
+  s.textContent = 'Guardado';
+  setTimeout(()=>{ s.textContent=''; }, 1400);
+}
+
+function restaurar(){
+  const totallecciónes = (DATOS.modulos[0] && DATOS.modulos[0].lecciónes) ? DATOS.modulos[0].lecciónes.length : 0;
+  for (let n=1; n<=totallecciónes; n++){
+    pintarProgreso(n);
+    const el = document.getElementById('n'+n);
+    if (el){
+      el.value = notas[n] || '';
+      let tm;
+      el.addEventListener('input', ()=>{ clearTimeout(tm); tm=setTimeout(()=>guardarNota(n), 600); });
+    }
+  }
+  tot();
+}
+function tot(){
+  let d=0; const totallecciónes=(DATOS.modulos[0]&&DATOS.modulos[0].lecciónes)?DATOS.modulos[0].lecciónes.length:0; for(let n=1;n<=totallecciónes;n++) if(prog[n]) d++;
+  const b = document.getElementById('totalbar');
+  if (b) b.style.width = (totallecciónes? (d/totallecciónes*100):0)+'%';
+  const t = document.getElementById('totalpc');
+  if (t) t.textContent = d+' de '+totallecciónes+' capítulos leídos';
+}
+
+function filtar(q){
+  q = q.toLowerCase().trim();
+  document.querySelectorAll('#toc a').forEach(a=>{
+    a.classList.remove('hidden');
+    if (q && a.textContent.toLowerCase().indexOf(q)===-1) a.classList.add('hidden');
+  });
+  document.querySelectorAll('#toc .mod').forEach(m=>{ m.style.display = q ? 'none' : ''; });
+}
+
+function scrollspy(){
+  const links = {};
+  document.querySelectorAll('#toc a').forEach(a=>{
+    const id = a.getAttribute('href').slice(1);
+    links[id] = a;
+  });
+  const ids = Object.keys(links);
+  let cur = null;
+  const onScroll = ()=>{
+    let best = null;
+    for (const id of ids){
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 140){ best = id; }
+    }
+    if (best !== cur){
+      if (cur && links[cur]) links[cur].classList.remove('on');
+      if (best && links[best]) links[best].classList.add('on');
+      cur = best;
+    }
+  };
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+}
+
+document.getElementById('menu').addEventListener('click', ()=>{
+  document.querySelector('nav').classList.toggle('open');
+});
+document.querySelectorAll('#toc a').forEach(function(a){
+  a.addEventListener('click', function(ev){
+    var id = a.getAttribute('href').slice(1);
+    var dest = document.getElementById(id);
+    if (dest) {
+      ev.preventDefault();
+      var y = dest.getBoundingClientRect().top + window.pageYOffset - 14;
+      try { window.scrollTo({top: y, behavior: 'smooth'}); }
+      catch(err) { window.scrollTo(0, y); }
+      if (window.history && history.replaceState) history.replaceState(null, '', '#' + id);
+    }
+    document.querySelectorAll('#toc a').forEach(function(x){ x.classList.remove('on'); });
+    a.classList.add('on');
+    if (window.innerWidth <= 1000) document.querySelector('nav').classList.remove('open');
+  });
+});
+document.getElementById('buscar').addEventListener('input', e=>filtar(e.target.value));
+
+render();
+// Respaldo: algunos navegadores embebidos ignoran scrollTo con objeto.
+(function(){
+  var s = document.documentElement.style;
+  if (!('scrollBehavior' in s)) return;
+  var orig = window.scrollTo;
+  window.scrollTo = function(arg){
+    if (arg && typeof arg === 'object' && arg.top !== undefined) {
+      try { return orig.call(window, arg); } catch(e){}
+      var d = document.getElementById((window.location.hash||'').slice(1));
+      if (d && d.scrollIntoView) d.scrollIntoView();
+      return;
+    }
+    return orig.apply(window, arguments);
+  };
+})();
+scrollspy();
+
+</script>
+<script>
+/* ---- Anclas de cada punto dentro de la lección + sub-enlaces del indice ---- */
+(function(){
+  var PARTES = [
+    ['art','Texto de la Confesión'], ['bib','Referencias bíblicas'],
+    ['intro','Introducción'], ['des','Desarrollo'], ['apl','Aplicación'],
+    ['orar','Oración final'], ['notas','Notas de estudio']
+  ];
+
+  document.querySelectorAll('section.lec').forEach(function(sec){
+    var num = sec.id.replace('L','');
+    var slugs = ['art','bib','intro','des','apl','orar'];
+    var hs = sec.querySelectorAll('h3.sub');
+    for (var i=0; i<hs.length && i<slugs.length; i++){ hs[i].id = 'L'+num+'-'+slugs[i]; }
+    var nt = sec.querySelector('.notas');
+    if (nt){ nt.id = 'L'+num+'-notas'; }
+  });
+
+  document.querySelectorAll('#toc a.lec').forEach(function(a){
+    var num = a.getAttribute('href').replace('#L','');
+    var frag = document.createDocumentFragment();
+    PARTES.forEach(function(p){
+      var s = document.createElement('a');
+      s.className = 'sub2';
+      s.setAttribute('href', '#L'+num+'-'+p[0]);
+      s.setAttribute('data-titulo', p[1]);
+      s.textContent = p[1];
+      frag.appendChild(s);
+    });
+    a.parentNode.insertBefore(frag, a.nextSibling);
+  });
+})();
+</script>
+
+<!-- service worker: habilita la instalacion como app y el uso sin conexion -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (e) {
+      console.warn('Service worker no registrado:', e);
+    });
+  });
+}
+</script>
+</body>
+</html>
